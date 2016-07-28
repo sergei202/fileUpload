@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>File Upload Example</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+        <script src="http://nervgh.github.io/pages/angular-file-upload/dist/angular-file-upload.min.js"></script>       <!-- Include src for agular-file-upload -->
+        <script>
+            angular.module('myApp', ['angularFileUpload']);                             // Note that our app has a new dependency on angularFileUpload
+
+            angular.module('myApp').controller('UploadCtrl', function($scope, FileUploader) {       // Inject the FileUploader service
+                $scope.uploader = new FileUploader({
+                    url: '/upload'                     // The server-side route where we want the file to be sent
+                });
+
+                $scope.uploader.onCompleteItem = function(item,response) {      // This function is called after the upload
+                    $scope.message = 'File uploaded!';
+                    $scope.filePath = response;
+                };
+
+            });
+        </script>
+    </head>
+    <body ng-app="myApp">
+		<div class="container" ng-controller="UploadCtrl">
+            <div class="page-header"><h1>Upload File Example</h1></div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <input type="file" class="form-control" nv-file-select uploader="uploader">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="button" class="btn btn-primary" ng-click="uploader.uploadAll()" value="Upload" ng-disabled="!uploader.queue.length">
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>{{message}}</p>
+                    <p><a href="{{filePath}}" target="_blank">{{filePath}}</a></p>
+                </div>
+            </div>
+		</div>
+	</body>
+</html>
